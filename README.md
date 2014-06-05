@@ -2,11 +2,6 @@
 
 > Headless Blanket.js code coverage and QUnit testing via PhantomJS
 
-## Introduction
-
-Check out the [blog post](http://geekdave.com/2013/07/20/code-coverage-enforcement-for-qunit-using-grunt-and-blanket/) 
-I wrote which provides a walkthrough of what this plugin can accomplish.
-
 ## Getting Started
 This plugin requires Grunt `~0.4.1`
 
@@ -38,11 +33,9 @@ In your project's Gruntfile, add a section named `blanket_qunit` to the data obj
 ```js
 grunt.initConfig({
   blanket_qunit: {
-    all: {
-      options: {
+    options: {
 		urls: ['test.html?coverage=true&gruntReport'],
         threshold: 70
-      }
     }
   }
 })
@@ -58,24 +51,24 @@ You can enable this reporter in one of two ways:
 
 1. As an inline proprety in your blanket.js script declaration, like so:
 
-   ```html
-   <script type="text/javascript" src="blanket.js"
+```html
+<script type="text/javascript" src="blanket.js"
         data-cover-reporter="reporter/grunt-reporter.js"></script>
-   ```
+```
 
-   This method is suitable if your test runner html file is only used for headless testing.  Do not use this if you will be using this test runner html file in a browser, as it will spew a bunch of alerts at you (see the reporter implementation for the ugly `alert` hack used to communicate with phantomjs).
+This method is suitable if your test runner html file is only used for headless testing.  Do not use this if you will be using this test runner html file in a browser, as it will spew a bunch of alerts at you (see the reporter implementation for the ugly `alert` hack used to communicate with phantomjs).
 
-1. As a conditional option evaluated at runtime in your test runner html, like so:
+2. As a conditional option evaulauted at runtime in your test runner html, like so:
 
-   ```html
-   <script>
-       if (location.href.match(/(\?|&)gruntReport($|&|=)/)) {
-           blanket.options("reporter", "reporter/grunt-reporter.js");
-       }
-   </script>
-   ``` 
+```js
+<script>
+    if (location.href.match(/(\?|&)gruntReport($|&|=)/)) {
+        blanket.options("reporter", "reporter/grunt-reporter.js");
+    }
+</script>
+``` 
 
-   Place this script snippet after your blanket.js script declaration.  This allows you to conditionally only enable this custom reporter if the `gruntReport` URL parameter is specified.  This way, you can share the same test runner html file between two use cases: running it in the browser and viewing the report inline, and running it via grunt. 
+Place this script snippet after your blanket.js script declaration.  This allows you to conditionally only enable this custom reporter if the `gruntReport` URL parameter is specified.  This way, you can share the same test runner html file between two use cases: running it in the browser and viewing the report inline, and running it via grunt. 
 
 
 ### Options
