@@ -152,7 +152,7 @@ module.exports = function(grunt) {
 
     };
 
-    phantomjs.on('blanket:fileDone', function(thisTotal, filename) {
+    phantomjs.on('blanket.fileDone', function(thisTotal, filename) {
         if (status.blanketPass === 0 && status.blanketFail === 0 ) {
             grunt.log.writeln();
         }
@@ -194,6 +194,11 @@ module.exports = function(grunt) {
 
     // Re-broadcast qunit events on grunt.event.
     phantomjs.on('qunit.*', function() {
+        var args = [this.event].concat(grunt.util.toArray(arguments));
+        grunt.event.emit.apply(grunt.event, args);
+    });
+    
+    phantomjs.on('blanket.*', function() {
         var args = [this.event].concat(grunt.util.toArray(arguments));
         grunt.event.emit.apply(grunt.event, args);
     });
@@ -336,6 +341,7 @@ module.exports = function(grunt) {
                     }
 
                     grunt.log.writeln();
+                    grunt.event.emit('unittest.complete', status.failed, status.total, status.duration);
 
                     if (!ok) {
                         grunt.warn("Issues were found.");
